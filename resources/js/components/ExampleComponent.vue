@@ -1,16 +1,22 @@
 <template>
-    <div class="container">
+    <div class="container d-flex h-100 flex-column">
+        <div class="flex-grow-1"></div>
         <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">Example Component</div>
-
-                    <div class="card-body">
-                        I'm an example component.
-                    </div>
-                </div>
+            <div class="col-3">
+                <div class="card">ITEM A</div>
             </div>
         </div>
+        <div class="row justify-content-center">
+            <div class="col-3">
+                <div class="card">ITEM B</div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-3">
+                <div class="card">ITEM C</div>
+            </div>
+        </div>
+        <div class="flex-grow-1"></div>
     </div>
 </template>
 

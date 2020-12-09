@@ -1,13 +1,15 @@
 import VueRouter from "vue-router";
 import Vue from 'vue'
-import ExampleComponent from "./components/ExampleComponent";
-
+import Login from "./components/Login";
+import Content from "./components/Content";
 Vue.use(VueRouter);
 
 export default new VueRouter({
         routes:[
-            {path: '/', component:ExampleComponent}
+            { path: '/', component:Content},
+            {path:'/login',component: Login}
         ],
-        mode:'history'
+        mode:'history',
+        linkActiveClass: "active"
     });
 

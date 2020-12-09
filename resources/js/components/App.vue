@@ -1,13 +1,27 @@
 <template>
-    <h1>Hello World</h1>
-</template>
+<div>
+    <div style="margin-bottom: 8vmin">
+        <AppNavBar />
+    </div>
+    <router-view></router-view>
 
-<script>
-export default {
-    name: "App"
-}
-</script>
+</div>
+
+</template>
 
 <style scoped>
 
 </style>
+<script>
+import AppNavBar from "./AppNavBar";
+import SideBar from "./SideBar";
+import ContentComponent from "./Content";
+export default {
+
+    components: {
+        AppNavBar,
+        SideBar,
+        ContentComponent
+    }
+}
+</script>
