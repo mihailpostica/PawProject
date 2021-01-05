@@ -1,5 +1,7 @@
 <?php
 
+use Kyslik\ColumnSortable\ColumnSortableServiceProvider;
+
 return [
 
     /*
@@ -163,7 +165,8 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-
+        //KyslikColumnSortableColumnSortableServiceProvider::class,
+        ColumnSortableServiceProvider::class,
         /*
          * Package Service Providers...
          */

@@ -58,8 +58,8 @@ class User extends Authenticatable
 
     public function Continut(){
         return $this->hasMany(Continut::class,'id','idUtilizator');
-
     }
+
     public function rol(){
         return $this->belongsTo(Roluri::class);
     }
@@ -70,6 +70,9 @@ class User extends Authenticatable
         }
         $this->attributes['password']=Hash::make($parola);
 
+    }
+    public function Categorii(){
+        return $this->belongsToMany(Categorii::class,'categorii_user','user_id','categorii_id');
     }
 
 

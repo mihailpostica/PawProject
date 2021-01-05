@@ -1,40 +1,47 @@
 import Vue from 'vue'
-import axios from "axios";
 import router from "./router";
-import App from "./components/App";
 import store from "./store"
+import ApiService from "./common/api.service";
 require('./bootstrap');
+import {library} from "@fortawesome/fontawesome-svg-core";
+import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
+import {
+    faEdit,
+    faFolder,
+    faHeart,
+    faPlusSquare,
+    faTrashAlt,
+    faUser,
+    faUserEdit
+} from "@fortawesome/free-solid-svg-icons";
+import {faCalendarAlt, faClock} from "@fortawesome/free-regular-svg-icons";
+import {faSpinner} from "@fortawesome/free-solid-svg-icons";
+import Main from "./Views/Main";
+import {getToken} from "./common/auth.service";
+import {CHECK_AUTH} from "./store/action.types";
+import {StarRating} from 'vue-rate-it';
+Vue.component("fa-icon",FontAwesomeIcon);
+library.add(faHeart,faCalendarAlt,faSpinner,faEdit,faUserEdit,faPlusSquare,faTrashAlt,faUser,faFolder,faClock)
+ApiService.init();
+Vue.component('navbar', require('./components/AppNavBar').default);
 
+import { BootstrapVue} from 'bootstrap-vue'
+Vue.use(BootstrapVue)
+Vue.component('star-rating', StarRating);
+const token = getToken();
+if (token) {
+    axios.defaults.headers.common['Authorization'] ='Bearer '+ token
+    console.log('token set');
+};
 
-axios.interceptors.response.use(
-    response => response,
-    error => {
-        if (error.response.status === 422) {
-            store.commit("setErrors", error.response.data.errors);
-        } else if (error.response.status === 401) {
-            store.commit("auth/setUserData", null);
-            localStorage.removeItem("authToken");
-            router.push({ name: "Login" });
-        } else {
-            return Promise.reject(error);
-        }
-    }
+router.beforeEach((to, from, next) =>
+    Promise.all([store.dispatch(CHECK_AUTH)]).then(()=>{next()})
 );
-axios.interceptors.request.use(function(config) {
-    config.headers.common = {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-        "Content-Type": "application/json",
-        Accept: "application/json"
-    };
-
-    return config;
-});
-
 
 const app = new Vue({
     el: '#app',
     components:{
-        App
+        Main,
     },
     router,
     store

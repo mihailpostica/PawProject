@@ -1,28 +1,56 @@
 
 <template>
-
     <div class="container">
         <div class="row justify-content-center " style="">
             <div class="col-md-8">
-                <div class="card">
+                <b-alert
+                    :show="dismissCountDown"
+                    dismissible
+                    :variant='this.alertType'
+                    @dismissed="dismissCountDown=0"
+                    @dismiss-count-down="countDownChanged"
+                >
+                    <p v-for="message in alertMessages">{{message}}</p>
+                    <b-progress
+                        variant="success"
+                        :max="dismissSecs"
+                        :value="dismissCountDown"
+                        height="4px"
+                    ></b-progress>
+                </b-alert>
+                <div class="d-flex justify-content-center"  v-if='this.isLoading' style="margin-top: 25em">
+                    <fa-icon :icon="['fas','spinner']" size="4x" spin></fa-icon>
+                </div>
+                <div v-else class="card">
                 <div class="login-box">
-                    <div class="login-snip"> <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab" style="cursor: pointer">Login</label> <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab" style="cursor: pointer">Sign Up</label>
+                    <div class="login-snip"> <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab" style="cursor: pointer" ref="logRef">Login</label> <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab" style="cursor: pointer">Sign Up</label>
                         <div class="login-space">
+
                             <div class="login">
-                                <div class="group"> <label for="userLogin" class="label">Username</label> <input id="userLogin" type="text" class="input" placeholder="Enter your username" v-model="user.email"> </div>
-                                <div class="group"> <label for="passLogin" class="label">Password</label> <input id="passLogin" type="password" class="input" data-type="password" placeholder="Enter your password" v-model="user.password"> </div>
-                                <div class="group"> <input type="submit" class="button" value="Sign In" @click="login"> </div>
+                                <div class="group"> <label for="userLogin" class="label">Username</label> <input id="userLogin" type="text" class="input" placeholder="Enter your username" v-model="email"> </div>
+                                <div class="group"> <label for="passLogin" class="label">Password</label> <input id="passLogin" type="password" class="input" data-type="password" placeholder="Enter your password" v-model="password"> </div>
+                                <div class="group"> <input type="submit" class="button" value="Sign In" @click="onSubmit(email,password)"> </div>
                                 <div class="hr"></div>
                                 <div class="foot"> <a href="#">Forgot Password?</a> </div>
                             </div>
                             <div class="sign-up-form">
-                                <div class="group"> <label for="userRegister" class="label">Username</label> <input id="userRegister" type="text" class="input" placeholder="Create your Username"> </div>
-                                <div class="group"> <label for="passRegister" class="label">Password</label> <input id="passRegister" type="password" class="input" data-type="password" placeholder="Create your password"> </div>
-                                <div class="group"> <label for="passRegisterConfirm" class="label">Repeat Password</label> <input id="passRegisterConfirm" type="password" class="input" data-type="password" placeholder="Repeat your password"> </div>
-                                <div class="group"> <label for="emailRegister" class="label">Email Address</label> <input id="emailRegister" type="text" class="input" placeholder="Enter your email address"> </div>
-                                <div class="group"> <input type="submit" class="button" value="Sign Up"> </div>
+                                <div class="group">  <input id="userRegister" type="text" class="input" placeholder="Username" v-model="username"> </div>
+                                <div class="group">  <input id="nume" type="text" class="input" placeholder="Nume" v-model="nume"> </div>
+                                <div class="group">  <input id="prenume" type="text" class="input" placeholder="Prenume" v-model="prenume"> </div>
+                                <div class="group">  <input id="passRegister" type="password" class="input" data-type="password" placeholder="Parola" v-model="password"> </div>
+                                <div class="group">  <input id="passRegisterConfirm" type="password" class="input" data-type="password" placeholder="Repeta parola" v-model="password_confirmation"> </div>
+                                <div class="group">  <input id="emailRegister" type="text" class="input" placeholder="Adresa email" v-model="email"> </div>
+                                <vue-multi-select
+                                    name="maybe"
+                                    placeholder="Alege Preferinte"
+                                    v-model="value"
+                                    :options="this.categorii"
+                                    option-key="value"
+                                    option-label="text"
+                                    class="mb-3"
+                                ></vue-multi-select>
+                                <div class="group"> <input type="submit" class="button" value="Sign Up" @click="onRegisterSubmit"> </div>
                                 <div class="hr"></div>
-                                <div class="foot"> <label for="tab-1">Already Member?</label> </div>
                             </div>
                         </div>
                     </div>
@@ -34,17 +62,98 @@
 </template>
 
 <script>
+import {mapGetters, mapState} from "vuex";
+import VueMultiSelect from "vue-simple-multi-select";
+import {FETCH_CATEGORII, LOGIN, REGISTER} from "../store/action.types";
+import ApiService from "../common/api.service";
 export default {
-    data:()=>({
-        user:{
-            email:"",
-            password:""
+    data() {
+        return {
+            email: null,
+            password: null,
+            password_confirmation:null,
+            nume:null,
+            prenume:null,
+            username:null,
+            value:[],
+            dismissSecs: 3,
+            dismissCountDown: 0,
+            showDismissibleAlert: false,
+            alertMessages:[],
+            alertType:''
+        };
+    },
+    components:{
+        VueMultiSelect
+    },
+    methods: {
+        onSubmit(email, password) {
+            this.$store
+                .dispatch(LOGIN, { email, password })
+                .then(() => this.$router.push({ name: "home" }));
+        },
+        onRegisterSubmit() {
+            let arr=[];
+            let idx=0;
+            this.value.forEach(function(v){arr[idx++]=v.value});
+            ApiService.post('users/register',{
+                email: this.email,
+                password_confirmation:this.password_confirmation,
+                nume:this.nume,
+                prenume:this.prenume,
+                password: this.password,
+                username: this.username,
+                preferinte:arr
+            }).then(({data}) => {
+                this.alertType='success';
+                this.dismissSecs=3;
+                let array=[]
+                array.push('Registered successfully');
+                this.showAlert(array);
+                this.sleep(3000).then(() => {
+                    const elem = this.$refs.logRef
+                    elem.click() });
+            }).
+            catch(error => {
+                let alertMessages=[]
+                error.response.data.errors.forEach(element =>{alertMessages.push(element)});
+                this.alertType='danger';
+                this.dismissSecs=5;
+                this.showAlert(alertMessages);
+            })
+
+        },
+        sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        },
+        countDownChanged(dismissCountDown) {
+            this.dismissCountDown = dismissCountDown
+        },
+        showAlert(message) {
+            this.alertMessages=message
+            this.dismissCountDown = this.dismissSecs
         }
-    }),
-    methods:{
-        login(){
-        this.$store.dispatch("CurrentUser/loginUser",this.user)
+    },
+    watch: {
+        errori:function (newVal){
+            if(Array.isArray(newVal)){
+            let alertMessages=[]
+            newVal.forEach(element =>{alertMessages.push(element)});
+            this.alertType='danger';
+            this.dismissSecs=5;
+            this.showAlert(alertMessages);
         }
+
+    },
+    },
+    computed: {
+        ...mapState({
+            errors: state => state.errors
+        }),
+        ...mapGetters(['categorii','errori','isLoading'])
+    },
+    created() {
+            this.$store.dispatch(FETCH_CATEGORII)
     }
 
 }
@@ -61,9 +170,8 @@ body {
 
 .login-box {
     width: 100%;
-    margin: auto;
     max-width: 525px;
-    min-height: 670px;
+    min-height: 770px;
     position: relative;
     box-shadow: 0 12px 15px 0 rgba(0, 0, 0, .24), 0 17px 50px 0 rgba(0, 0, 0, .19)
 }
@@ -72,7 +180,7 @@ body {
     width: 100%;
     height: 100%;
     position: absolute;
-    padding: 90px 70px 50px 70px;
+    padding: 95px 70px 50px 70px;
     background: rgba(255,255,255, 1)
 }
 
