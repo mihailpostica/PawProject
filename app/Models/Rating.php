@@ -13,6 +13,7 @@ class Rating extends Model
         'user_id',
         'continut_id',
         'descriere',
+
         'rating'
     ];
 
