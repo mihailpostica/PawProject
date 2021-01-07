@@ -26,6 +26,7 @@ ApiService.init();
 Vue.component('navbar', require('./components/AppNavBar').default);
 
 import { BootstrapVue} from 'bootstrap-vue'
+import {mapGetters} from "vuex";
 Vue.use(BootstrapVue)
 Vue.component('star-rating', StarRating);
 const token = getToken();
@@ -34,14 +35,21 @@ if (token) {
     console.log('token set');
 };
 
-router.beforeEach((to, from, next) =>
-    Promise.all([store.dispatch(CHECK_AUTH)]).then(()=>{next()})
+router.beforeEach((to, from, next) => {
+        Promise.all([store.dispatch(CHECK_AUTH)]).then((data) => {
+            next();
+        })
+    }
 );
+
 
 const app = new Vue({
     el: '#app',
     components:{
         Main,
+    },
+    computed:{
+      ...mapGetters(["isAuthenticated"])
     },
     router,
     store

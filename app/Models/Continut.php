@@ -4,8 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Searchable\Searchable;
+use Spatie\Searchable\SearchResult;
 
-class Continut extends Model
+class Continut extends Model implements Searchable
 {
 
     use HasFactory;
@@ -17,11 +19,11 @@ class Continut extends Model
                             'user_id',
                             'verificat',
                             'stamp',
-                            'categorie_id'
+                            'categorii_id'
                         ];
     protected $appends =['avgRating'];
     protected $hidden = [
-        'categorie_id',
+        'categorii_id',
         'stamp',
     ];
     /**
@@ -30,19 +32,26 @@ class Continut extends Model
     private $avgRating=0;
 
     public function getAvgRatingAttribute(){
-    return $this->avgRating;
-}
+        return $this->avgRating;
+    }
     public function setAvgRatingAttribute($value){
          $this->avgRating=$value;
     }
-public function Utilizator(){
-    return $this->belongsTo(User::Class,'user_id','id');
-}
-public function Categorie(){
-    return $this->belongsTo(Categorii::class,'categorie_id','id');
-}
+    public function Utilizator(){
+        return $this->belongsTo(User::Class,'user_id','id');
+    }
+    public function Categorie(){
+        return $this->belongsTo(Categorii::class,'categorii_id','id');
+    }
     public function Ratings(){
         return $this->hasMany(Rating::class);
+    }
+
+    public function getSearchResult(): SearchResult
+    {
+       // $url = route('members.show', $this->id);
+
+        return new SearchResult($this, $this->titlu);
     }
 
 }

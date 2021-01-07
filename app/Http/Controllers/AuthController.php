@@ -28,11 +28,11 @@ class AuthController extends Controller
                 return response()->json(['errors'=>$errors],500);
             }
        if (!Auth::attempt($request->all())){
-           return response()->json(['errors'=>['Invalid credentials']],200);
+           return response()->json(['errors'=>['Invalid credentials']],500);
        }
         $role=Auth::user()->rol->rol_name;
         $id=Auth::id();
-        $user=User::Where(['id'=>$id])->with('Categorii')->first();
+        $user=User::Where(['id'=>$id])->with('Categorii','rol')->first();
        $accessToken=Auth::user()->createToken('api_token',[$role])->accessToken;
        return response()->json(['user'=>$user,'accessToken'=>$accessToken],200);
     }
@@ -73,7 +73,7 @@ class AuthController extends Controller
     }
     public function getUser(){
         $id=Auth::id();
-        $user=User::Where(['id'=>$id])->with('Categorii')->first();
+        $user=User::Where(['id'=>$id])->with('Categorii','rol')->first();
         return response()->json(['user'=>$user],200);
     }
 

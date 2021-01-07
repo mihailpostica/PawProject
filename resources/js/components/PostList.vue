@@ -1,7 +1,8 @@
 <template>
 <div class="container">
     <ul class="list-group">
-        <div class="d-flex justify-content-center"  v-if="isUserPostsLoading" style="margin-top: 25em">
+
+        <div class="d-flex justify-content-center"  v-if="shouldSpin" style="margin-top: 25em">
             <fa-icon :icon="['fas','spinner']" size="4x" spin></fa-icon>
         </div>
         <div v-else>
@@ -82,7 +83,13 @@ export default {
         this.fetchUserArticles();
     },
     computed:{
-        ...mapGetters(['userPosts','isUserPostsLoading'])
+        ...mapGetters(['userPosts','isUserPostsLoading','isArticleLoading']),
+        shouldSpin(){
+            if(this.isUserPostsLoading){
+                return true;
+            }
+            return this.isArticleLoading;
+        }
     }
 }
 </script>

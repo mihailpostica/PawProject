@@ -5,7 +5,6 @@
             </div>
             <div v-else class="row">
                 <div class="col-md-6 offset-md-3 col-xs-12">
-                    <h1 class="text-xs-center" v-show="isEdit">Actualizeaza Postare</h1>
                     <h1 class="text-xs-center" v-show="!isEdit">Adauga Postare Noua</h1>
                     <div>
                         <b-alert
@@ -45,9 +44,6 @@
                                     <b-form-select v-model="selectedCategory" :options="categorii"></b-form-select>
                             </fieldset>
 
-                            <button v-show="isEdit" class="btn btn-lg btn-primary pull-xs-right" @click="update()">
-                                Actualizeaza Postare
-                            </button>
                             <button v-show="!isEdit" class="btn btn-lg btn-primary pull-xs-right" @click="save()">
                                 Adauga Postare
                             </button>
@@ -63,7 +59,7 @@
 </template>
 
 <script>
-import {ARTICLE_EDIT, ARTICLE_PUBLISH, FETCH_CATEGORII} from "../store/action.types";
+import { ARTICLE_PUBLISH, FETCH_CATEGORII} from "../store/action.types";
 import {mapGetters} from "vuex";
 
 export default {
@@ -102,7 +98,7 @@ name: "PostForm",
         const payload={
             titlu:this.post.titlu,
             descriere:this.post.descriere,
-            categorie_id:this.selectedCategory,
+            categorii_id:this.selectedCategory,
         }
         this.$store.dispatch(ARTICLE_PUBLISH,payload).then(({data})=>{
             console.log(data);
@@ -112,7 +108,7 @@ name: "PostForm",
                 let array=[]
                 array.push(data.message);
                 this.showAlert(array);
-                this.sleep(3000).then(() => { this.$router.push({name:'home'}) });
+                this.sleep(3000).then(() => { this.$router.push({name:'UserPosts'}) });
             }
         }).catch(error => {
             let alertMessages=[]
@@ -123,23 +119,7 @@ name: "PostForm",
             this.showAlert(alertMessages);
         });
     },
-    update(){
-        const payload={
-            titlu:this.post.titlu,
-            descriere:this.post.descriere,
-            categorie_id:this.selectedCategory,
-            id:this.post.id
-        }
 
-        this.$store.dispatch(ARTICLE_EDIT,payload).then(({ data }) => {
-            if(data.success){
-                this.alertType='success';
-                this.dismissSecs=3;
-                this.showAlert(["Postarea a fost actualizata cu success"]);
-                this.sleep(3000).then(() => { this.$router.push({name:'UserPosts'}) });
-            }
-        })
-    },
         fetchAllCategories(){
             this.$store.dispatch(FETCH_CATEGORII)
         },

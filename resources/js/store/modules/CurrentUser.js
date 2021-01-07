@@ -13,13 +13,17 @@ const state = {
     errors: null,
     user: {},
     isAuthenticated: !!AuthService.getToken(),
-    isUserLoading:false
+    isUserLoading:false,
+    isAdmin:false
 };
 const getters = {
     currentUser(state) {
         return state.user;
     },
     isAuthenticated(state) {
+        return state.isAuthenticated;
+    },
+    isAdmin(state) {
         return state.isAuthenticated;
     },
     loadingUser(state) {
@@ -110,6 +114,7 @@ const mutations = {
     [SET_USER](state,payload){
         state.isAuthenticated = true;
         state.user = payload.user;
+        state.isAdmin=(payload.user.rol.rol_name =="ADMIN")
         state.errors = {};
     },
     [PURGE_AUTH](state) {

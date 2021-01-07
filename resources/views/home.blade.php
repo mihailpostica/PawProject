@@ -2,7 +2,7 @@
 
 @section('content')
 <div id="app">
-    <navbar></navbar>
+    <navbar ></navbar>
         <router-view style="margin-top:5em"></router-view>
 </div>
 @endsection

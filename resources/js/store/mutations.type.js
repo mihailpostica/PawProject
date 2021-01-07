@@ -1,5 +1,5 @@
 export const FETCH_END = "setArticles";
-export const FETCH_START = "setLoading";
+export const FETCH_START = "setStart";
 export const FETCH_USER_END = "setUserArticles";
 export const FETCH_USER_START = "setUserLoading";
 export const PURGE_AUTH = "logOut";

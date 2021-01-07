@@ -69,7 +69,6 @@ import AvatarCropper from "vue-avatar-cropper";
 import {getToken} from "../common/auth.service";
 import {IMAGE_PATH,API_URL} from "../common/config";
 import VueMultiSelect from "vue-simple-multi-select";
-import {SET_AUTH, SET_USER} from "../store/mutations.type";
 export default {
     name: "Settings",
         data:()=>({
@@ -107,8 +106,6 @@ components:{
         profilePicture(){
                 return IMAGE_PATH+this.currentUser.imagine
             },
-
-
     },
 
 
@@ -143,8 +140,6 @@ components:{
             this.alertMessages=message
             this.dismissCountDown = this.dismissSecs
         }
-
-
 
     }
 };

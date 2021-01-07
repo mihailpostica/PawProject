@@ -54,8 +54,6 @@
 <script>
 import PostList from "../components/PostList";
 import UserInformation from "./UserInformation";
-import PostForm from "../components/PostForm";
-
 export default {
 name: "DashBoard",
     methods:{

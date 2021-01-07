@@ -1,8 +1,8 @@
 
 <template>
     <div class="container">
-        <div class="row justify-content-center " style="">
-            <div class="col-md-8">
+        <div class="row justify-content-center">
+            <div class="col">
                 <b-alert
                     :show="dismissCountDown"
                     dismissible
@@ -18,6 +18,12 @@
                         height="4px"
                     ></b-progress>
                 </b-alert>
+            </div>
+        </div>
+
+        <div class="row justify-content-center " style="">
+            <div class="col-md-8">
+
                 <div class="d-flex justify-content-center"  v-if='this.isLoading' style="margin-top: 25em">
                     <fa-icon :icon="['fas','spinner']" size="4x" spin></fa-icon>
                 </div>
@@ -29,9 +35,9 @@
                             <div class="login">
                                 <div class="group"> <label for="userLogin" class="label">Username</label> <input id="userLogin" type="text" class="input" placeholder="Enter your username" v-model="email"> </div>
                                 <div class="group"> <label for="passLogin" class="label">Password</label> <input id="passLogin" type="password" class="input" data-type="password" placeholder="Enter your password" v-model="password"> </div>
-                                <div class="group"> <input type="submit" class="button" value="Sign In" @click="onSubmit(email,password)"> </div>
+                                <div class="group"> <input type="submit" class="button" value="Sign In" @click="onSubmit(email,password)" v-on:keyup="enter"> </div>
                                 <div class="hr"></div>
-                                <div class="foot"> <a href="#">Forgot Password?</a> </div>
+
                             </div>
                             <div class="sign-up-form">
                                 <div class="group">  <input id="userRegister" type="text" class="input" placeholder="Username" v-model="username"> </div>
@@ -90,7 +96,15 @@ export default {
         onSubmit(email, password) {
             this.$store
                 .dispatch(LOGIN, { email, password })
-                .then(() => this.$router.push({ name: "home" }));
+                .then(() => {
+                    console.log('should have pushed')
+                    this.$router.push({ name: "home" })
+                });
+        },
+        enter(e){
+            if (e.keyCode === 13) {
+                this.onSubmit(this.email,this.password)
+            }
         },
         onRegisterSubmit() {
             let arr=[];
@@ -171,9 +185,16 @@ body {
 .login-box {
     width: 100%;
     max-width: 525px;
-    min-height: 770px;
+    min-height: 670px;
     position: relative;
     box-shadow: 0 12px 15px 0 rgba(0, 0, 0, .24), 0 17px 50px 0 rgba(0, 0, 0, .19)
+}
+.wdth{
+    max-width: 525px;
+    padding: px 70px 50px 70px;
+    width: 100%;
+    padding-bottom: 5px;
+    margin: 0 15px 20px 0;
 }
 
 .login-snip {

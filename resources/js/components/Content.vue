@@ -3,7 +3,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div style="margin-bottom: 1rem" class="d-flex justify-content-between align-items-center">
-                                <router-link  to="/Login"> <button class="numberCircle" style="color: white; background: #51ADC4 " @mouseover="mouseOver" @mouseleave="mouseLeave" :class="{example_b:this.hover}"  > {{post.categorie.nume}}</button></router-link>
+                                <router-link  to="/"> <button class="numberCircle" style="color: white; background: #51ADC4 "   > {{post.categorie.nume}}</button></router-link>
                                 <span style="color:#989898"><fa-icon :icon="['far','clock']" style="margin-right: 1px"></fa-icon>{{getdate}}</span>
                             </div>
                             <router-link :to="articleLink" style="color: #1b1e21; font-weight:bold">
@@ -128,8 +128,10 @@ export default {
     border: 1px transparent;
     padding-left: 30%;
     padding-right: 30%;
-}
+    cursor: default;
 
+}
+button:focus {outline:0;}
 .example_b {
     text-shadow: 100px 100px 100px rgba(240, 255, 255, 1);
     -webkit-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);

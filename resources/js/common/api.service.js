@@ -30,6 +30,7 @@ const ApiService = {
     },
 
     post(resource, params) {
+        console.log('here')
       const a= Vue.axios.post(`${resource}`, params);
         return a;
     },

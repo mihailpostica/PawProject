@@ -2,11 +2,9 @@ import {
     ARTICLE_DELETE,
     ARTICLE_EDIT,
     ARTICLE_PUBLISH,
-    FETCH_ARTICLE,
-    FETCH_RATINGS,
-    FETCH_USER_ARTICLES, RATINGS_CREATE
+    FETCH_USER_ARTICLES,
 } from "../action.types";
-import {FETCH_DELETE_END, FETCH_USER_END, FETCH_USER_START, SET_ARTICLE} from "../mutations.type";
+import {FETCH_DELETE_END, FETCH_USER_END, FETCH_USER_START} from "../mutations.type";
 import {ArticlesService} from "../../common/article.service";
 
 

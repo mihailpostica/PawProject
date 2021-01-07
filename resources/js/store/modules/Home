@@ -1,5 +1,5 @@
 import {ArticlesService} from "../../common/article.service";
-import {FETCH_ARTICLES, FETCH_CATEGORII} from "../action.types";
+import {CREATE_CATEGORII, FETCH_ARTICLES, FETCH_AUTH_ARTICLES, FETCH_CATEGORII} from "../action.types";
 import {FETCH_CATEGORII_END, FETCH_END, FETCH_START} from "../mutations.type";
 import {CategoriiService} from "../../common/categorii.service";
 
@@ -27,9 +27,19 @@ const getters = {
     },
 };
 const actions = {
-    [FETCH_ARTICLES]({ commit }, params) {
+    [FETCH_ARTICLES]({ commit }) {
         commit(FETCH_START);
-        return ArticlesService.query(params.type)
+        return ArticlesService.query()
+            .then(({ data }) => {
+                commit(FETCH_END, data);
+            })
+            .catch(error => {
+                throw new Error(error);
+            });
+    },
+    [FETCH_AUTH_ARTICLES]({ commit }) {
+        commit(FETCH_START);
+        return ArticlesService.queryAuth()
             .then(({ data }) => {
                 commit(FETCH_END, data);
             })
@@ -46,6 +56,10 @@ const actions = {
             .catch(error => {
                 throw new Error(error);
             });
+    },
+    [CREATE_CATEGORII]({ commit },payload) {
+        commit(FETCH_START);
+        return CategoriiService.create(payload)
     },
 
 

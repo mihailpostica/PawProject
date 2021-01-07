@@ -26,7 +26,9 @@ class CategoriiController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        Categorii::Create($request->all());
+        return response()->json(['message'=>'Domeniu adaugat cu success','success'=>true],200);
     }
 
     /**

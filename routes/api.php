@@ -19,12 +19,12 @@ use Illuminate\Support\Facades\Route;
 //});
 Route::group(['middleware'=>'auth:api'],function (){
         Route::prefix("/posts")->group(function(){
-        Route::middleware(['auth:api', 'scopes:USER'])->get('/users','App\Http\Controllers\AuthController@users');
         Route::get('/{id}/ratings','App\Http\Controllers\PostsController@ratings');
         Route::post('/upload','App\Http\Controllers\PostsController@uploadImage');
         Route::post('/{id}/ratings','App\Http\Controllers\PostsController@addRating');
+        Route::get('','App\Http\Controllers\PostsController@index');
+        Route::post('/search','App\Http\Controllers\PostsController@search');
     });
-
 
         Route::prefix("/user")->group(function(){
         Route::get('','App\Http\Controllers\AuthController@getUser');
@@ -33,6 +33,7 @@ Route::group(['middleware'=>'auth:api'],function (){
         Route::delete('/posts/{id}','App\Http\Controllers\PostsController@destroy');
         Route::put('/posts/{id}','App\Http\Controllers\PostsController@update');
         Route::post('/posts','App\Http\Controllers\PostsController@store');
+        Route::get('/posts/{id}','App\Http\Controllers\PostsController@showUserPost');
     });
         Route::get('/posts/{id}','App\Http\Controllers\PostsController@show');
         Route::get('user/categorii','App\Http\Controllers\AuthController@Categorii');
@@ -41,12 +42,10 @@ Route::group(['middleware'=>'auth:api'],function (){
 );
 
 
-Route::prefix("/posts")->group(function(){
-    Route::get('','App\Http\Controllers\PostsController@index');
+Route::middleware(['auth:api', 'scopes:ADMIN'])->post('/categorie','App\Http\Controllers\CategoriiController@store');
 
-});
 Route::get('categories','App\Http\Controllers\CategoriiController@index');
 Route::post('users/login','App\Http\Controllers\AuthController@Login');
-Route::post('users/createRol','App\Http\Controllers\AuthController@createRol');
 Route::post('users/register','App\Http\Controllers\AuthController@Register');
+Route::get('/allposts','App\Http\Controllers\PostsController@indexNoAuth');
 

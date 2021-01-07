@@ -2,6 +2,11 @@ import ApiService from "./api.service";
 
 export const ArticlesService = {
     query(type, params) {
+        return ApiService.query("allposts", {
+            params: params
+        });
+    },
+    queryAuth(type, params) {
         return ApiService.query("posts", {
             params: params
         });
@@ -14,6 +19,9 @@ export const ArticlesService = {
     get(slug) {
         const a=ApiService.get("posts", slug);
         return a;
+    },
+    getCurrentUserArticle(slug) {
+        return ApiService.get("user/posts", slug);
     },
     create(params) {
       const a= ApiService.post("user/posts", params);

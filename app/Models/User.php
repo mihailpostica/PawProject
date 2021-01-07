@@ -39,7 +39,6 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'remember_token',
-        'rol',
         'email_verified_at',
         'password',
         'created_at',
@@ -60,7 +59,7 @@ class User extends Authenticatable
         return $this->hasMany(Continut::class,'id','idUtilizator');
     }
 
-    public function rol(){
+    public function Rol(){
         return $this->belongsTo(Roluri::class);
     }
 

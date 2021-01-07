@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Categorii;
 use App\Models\Continut;
 use App\Models\Rating;
+use App\Models\User;
 use Illuminate\Http\Request;
 Use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Mockery\Exception;
-
+use Spatie\Searchable\ModelSearchAspect;
+use Spatie\Searchable\Search;
 
 class PostsController extends Controller
 {
@@ -20,7 +23,16 @@ class PostsController extends Controller
      */
     public function index()
     {
-        $posts=Continut::with('Utilizator','Categorie','Ratings')->latest()->paginate(20);
+        $id=Auth::id();
+
+            $user=User::with('Categorii')->where(['id'=>$id])->first();
+            $categorii=[];
+            foreach ($user->categorii as $categorie){
+                array_push($categorii, $categorie->id);
+            }
+
+            $posts=Continut::with('Utilizator','Categorie','Ratings')->whereIn('categorii_id',$categorii)->latest()->paginate(100);
+
         if (is_array($posts) || is_object($posts)) {
             foreach ($posts as $post) {
                 $ratings = $post->ratings;
@@ -39,6 +51,29 @@ class PostsController extends Controller
 
                 }
             }
+        return response()->json($posts,200);
+    }
+    public function indexNoAuth()
+    {
+        $posts=Continut::with('Utilizator','Categorie','Ratings')->latest()->paginate(100);
+        if (is_array($posts) || is_object($posts)) {
+            foreach ($posts as $post) {
+                $ratings = $post->ratings;
+                $avgRating = 0;
+                $post->setHidden(['ratings']);
+                if (is_array($ratings) || is_object($ratings)) {
+                    foreach ($ratings as $rating) {
+                        $avgRating += $rating->rating;
+                    }
+                    $count = count($ratings);
+                    if($count==0){
+                        $count=1;
+                    }
+                    $post->avgRating = $avgRating / $count;
+                }
+
+            }
+        }
         return response()->json($posts,200);
     }
 
@@ -76,7 +111,7 @@ class PostsController extends Controller
     public function store(Request $request)
     {
         $rules=array(
-            'categorie_id' => ['required', 'integer'],
+            'categorii_id' => ['required', 'integer'],
             'titlu' => ['required', 'string', 'max:255'],
             'descriere' => ['required', 'string'],
         );
@@ -113,6 +148,17 @@ class PostsController extends Controller
             return response()->json(['success' => True,'post'=>$post], 200);
         }else{
             return   response()->json(['success' => False,'message'=>'Not Found'], 404);
+        }
+    }
+    public function showUserPost($id)
+    {
+        $matchThese=['id'=>'$id','user_id',Auth::user()->id];
+        $post = Continut::where([$matchThese])->with('Utilizator','Categorie')->first();
+
+        if (!is_null($post) ){
+            return response()->json(['success' => True,'post'=>$post], 200);
+        }else{
+            return   response()->json(['success' => False,'message'=>'You can not edit this post'], 500);
         }
     }
 
@@ -161,6 +207,22 @@ class PostsController extends Controller
         }catch (Exception $exception){
             return response()->json(['success'=>false,'error'=>$exception->getMessage()],500);
         }
+    }
+
+    public function search(Request $request)
+    {
+        $results = (new Search())
+            ->registerModel(Continut::class,function (ModelSearchAspect $modelSearchAspect) use ($request) {
+                $modelSearchAspect->addSearchableAttribute('descriere');
+                $modelSearchAspect->addSearchableAttribute('titlu');
+                $modelSearchAspect->with('Categorie');
+                $modelSearchAspect->with('Utilizator');
+            })->registerModel(Categorii::class,function (ModelSearchAspect $modelSearchAspect) use ($request) {
+                $modelSearchAspect->addSearchableAttribute('nume');
+                $modelSearchAspect->with(['Continut','Continut.Utilizator']);
+            })
+            ->search($request->input('query'));
+        return response()->json(['posts'=>$results],200);
     }
 
 

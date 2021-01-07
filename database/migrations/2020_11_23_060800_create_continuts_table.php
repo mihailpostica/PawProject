@@ -16,13 +16,13 @@ class CreateContinutsTable extends Migration
         Schema::create('continut', function (Blueprint $table) {
             $table->id();
             $table->string('data');
-            $table->foreignId('categorie_id');
+            $table->foreignId('categorii_id');
             $table->string('titlu');
             $table->string('descriere');
             $table->foreignId('user_id');
             $table->boolean('verificat');
             $table->timestamps();
-            $table->foreign('categorie_id')->references('id')->on('categorii');
+            $table->foreign('categorii_id')->references('id')->on('categorii');
             $table->foreign("user_id")->references('id')->on('users');
         });
     }
