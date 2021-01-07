@@ -32,7 +32,6 @@ Vue.component('star-rating', StarRating);
 const token = getToken();
 if (token) {
     axios.defaults.headers.common['Authorization'] ='Bearer '+ token
-    console.log('token set');
 };
 
 router.beforeEach((to, from, next) => {

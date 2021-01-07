@@ -8,42 +8,49 @@ const ApiService = {
     init() {
         Vue.use(VueAxios, axios);
         Vue.axios.defaults.baseURL = API_URL;
+        console.log(Vue.axios.defaults.baseURL)
     },
 
     setHeader() {
         console.log(JwtService.getToken())
+
         Vue.axios.defaults.headers.common[
             "Authorization"
             ] = 'Bearer '+ JwtService.getToken();
     },
 
     query(resource, params) {
+        console.log(Vue.axios.defaults.baseURL)
         return Vue.axios.get(resource, params).catch(error => {
             throw new Error(`ApiService ${error}`);
         });
     },
 
     get(resource, slug = "") {
+        console.log(Vue.axios.defaults.baseURL)
         return Vue.axios.get(`${resource}/${slug}`).catch(error => {
             throw new Error(`ApiService ${error}`);
         });
     },
 
     post(resource, params) {
-        console.log('here')
+        console.log(Vue.axios.defaults.baseURL)
       const a= Vue.axios.post(`${resource}`, params);
         return a;
     },
 
     update(resource, slug, params) {
+        console.log(Vue.axios.defaults.baseURL)
         return Vue.axios.put(`${resource}/${slug}`, params);
     },
 
     put(resource, params) {
+        console.log(Vue.axios.defaults.baseURL)
         return Vue.axios.put(`${resource}`, params);
     },
 
     delete(resource) {
+        console.log(Vue.axios.defaults.baseURL)
         return Vue.axios.delete(resource).catch(error => {
             throw new Error(` ApiService ${error}`);
         });
@@ -52,40 +59,3 @@ const ApiService = {
 
 export default ApiService;
 
-export const TagsService = {
-    get() {
-        return ApiService.get("tags");
-    }
-};
-
-
-
-export const CommentsService = {
-    get(slug) {
-        if (typeof slug !== "string") {
-            throw new Error(
-                "[RWV] CommentsService.get() article slug required to fetch comments"
-            );
-        }
-        return ApiService.get("articles", `${slug}/comments`);
-    },
-
-    post(slug, payload) {
-        return ApiService.post(`articles/${slug}/comments`, {
-            comment: { body: payload }
-        });
-    },
-
-    destroy(slug, commentId) {
-        return ApiService.delete(`articles/${slug}/comments/${commentId}`);
-    }
-};
-
-export const FavoriteService = {
-    add(slug) {
-        return ApiService.post(`articles/${slug}/favorite`);
-    },
-    remove(slug) {
-        return ApiService.delete(`articles/${slug}/favorite`);
-    }
-};

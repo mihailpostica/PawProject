@@ -55,6 +55,7 @@ import UserRating from "./UserRating";
 import store from '../store'
 import {FETCH_ARTICLE, FETCH_RATINGS, RATINGS_CREATE} from "../store/action.types";
 import {mapGetters} from "vuex";
+import {API_URL, IMAGE_PATH} from "../common/config";
 
 export default {
 name: "PostView",
@@ -84,7 +85,7 @@ name: "PostView",
     },
 methods:{
     getProfilePhoto(){
-        return 'http://localhost:8000/storage/'+ this.article.utilizator.imagine
+        return IMAGE_PATH+ this.article.utilizator.imagine
     },
     submitRating2(){
       this.rated=!this.rated;

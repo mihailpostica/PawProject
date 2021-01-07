@@ -32,7 +32,7 @@ name: "UserRating",
     },
     methods:{
         getProfilePhoto(){
-            return 'http://localhost:8000/storage/'+ this.userRating.utilizator.imagine
+            return APP_URL + 'this.userRating.utilizator.imagine'
         },
        getName(){
 
