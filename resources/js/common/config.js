@@ -1,3 +1,3 @@
-export const API_URL = "http://127.0.0.1:8000/api";
-export const IMAGE_PATH = 'http://127.0.0.1:8000/storage/'
+export const API_URL = "https://paw-project-2nd-try.herokuapp.com/api";
+export const IMAGE_PATH = 'https://paw-project-2nd-try.herokuapp.com/storage/'
 export default API_URL;
