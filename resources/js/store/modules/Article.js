@@ -65,10 +65,8 @@ export const mutations = {
     },
     setRatingsLoading(state,value){
         if (value) {
-            console.log(value+'tr')
             state.isRatingsLoading = true
         }else{
-            console.log(value)
             state.isRatingsLoading=false
         }
     },

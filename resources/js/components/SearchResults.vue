@@ -68,8 +68,7 @@ export default {
                   }
           });
            this.isLoading=false;
-          console.log(this.postsMatches);
-          console.log(this.categoryMatches);
+
         })
         this.fetchSearchResults();
 

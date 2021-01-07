@@ -90,7 +90,6 @@ name: "PostForm",
     },
     watch:{
     selectedCat:function (){
-        console.log(this.selectedCat)
     }
     },
     methods:{
@@ -101,7 +100,7 @@ name: "PostForm",
             categorii_id:this.selectedCategory,
         }
         this.$store.dispatch(ARTICLE_PUBLISH,payload).then(({data})=>{
-            console.log(data);
+
             if(data.success){
                 this.alertType='success';
                 this.dismissSecs=3;
@@ -113,7 +112,6 @@ name: "PostForm",
         }).catch(error => {
             let alertMessages=[]
             error.response.data.errors.forEach(element =>{alertMessages.push(element)});
-            console.log(alertMessages);
             this.alertType='danger';
             this.dismissSecs=5;
             this.showAlert(alertMessages);

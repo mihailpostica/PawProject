@@ -97,7 +97,6 @@ export default {
             this.$store
                 .dispatch(LOGIN, { email, password })
                 .then(() => {
-                    console.log('should have pushed')
                     this.$router.push({ name: "home" })
                 });
         },

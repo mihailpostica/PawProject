@@ -25,12 +25,10 @@ export const ArticlesService = {
     },
     create(params) {
       const a= ApiService.post("user/posts", params);
-      console.log(a)
         return a;
     },
     update(slug, params) {
        const a=ApiService.update("user/posts", slug, params)
-        console.log(a)
         return a
     },
     destroy(slug) {

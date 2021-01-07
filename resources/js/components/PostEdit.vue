@@ -89,7 +89,7 @@ export default {
     },
     watch:{
         selectedCat:function (){
-            console.log(this.selectedCat)
+
         }
     },
     beforeRouteEnter(to, from, next) {
