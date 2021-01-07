@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\URL;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 //Route::middleware('auth:api')->get('/user', function (Request $request) {
    // return $request->user();
 //});
-Route::group(['middleware'=>'auth:api','scheme' => 'https'],function (){
+Route::group(['middleware'=>'auth:api'],function (){
         Route::prefix("/posts")->group(function(){
         Route::get('/{id}/ratings','App\Http\Controllers\PostsController@ratings');
         Route::post('/upload','App\Http\Controllers\PostsController@uploadImage');
@@ -48,4 +49,6 @@ Route::get('categories','App\Http\Controllers\CategoriiController@index');
 Route::post('users/login','App\Http\Controllers\AuthController@Login');
 Route::post('users/register','App\Http\Controllers\AuthController@Register');
 Route::get('/allposts','App\Http\Controllers\PostsController@indexNoAuth');
+
+URL::forceScheme('https');
 
